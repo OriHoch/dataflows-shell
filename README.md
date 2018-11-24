@@ -7,7 +7,7 @@ DataFlows Shell enhances [DataFlows](https://github.com/datahq/dataflows) with s
 Install
 
 ```
-$ pip install dataflows-shell
+$ python3 -m pip install -U dataflows-shell
 ```
 
 Start the DataFlows shell
