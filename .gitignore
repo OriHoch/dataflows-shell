@@ -1,0 +1,6 @@
+workdir
+.idea
+*.egg-info
+dist
+tests/data
+.dfs-checkpoints
