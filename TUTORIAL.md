@@ -1,3 +1,18 @@
+# DataFlows Shell Tutorial
+
+Install DataFlows Shell
+
+```
+python3 -m pip install -U dataflows-shell
+```
+
+Start a DataFlows shell session
+
+```
+$ dfs
+
+dfs >
+```
 
 Run the `ls` processor to find all `.zip` files under the user's home directory
 
