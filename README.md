@@ -1,6 +1,6 @@
 # DataFlows Shell
 
-DataFlows Shell enhances [DataFlows](https://github.com/datahq/dataflows) with shell integration.
+Leverage the [DataFlows](https://github.com/datahq/dataflows) data processing framework for shell automation.
 
 ## Introduction
 
@@ -8,36 +8,22 @@ A lot of the work on the shell, especially for "DevOps" / automation type work, 
 The first command a shell user learns is `ls` - which returns a set of data.
 The second might by `grep` or `cp` - which filters and performs actions based on this data set.
 
-DataFlows Shell brings the power of the [DataFlows]() data processing framework to the shell.
+DataFlows Shell acts as a very minimal and intuitive layer between the shell and [the DataFlows framework](https://github.com/datahq/dataflows).
 
-DataFlows Shell acts as a very minimal and intuitive layer between the shell, the DataFlows framework, and the [Frictionless Data Ecosystem](https://frictionlessdata.io/).
+## Demo
 
-## Quickstart
+The following example shell session demonstrated importing the required processors, running a processor chain and printing the output.
 
-The only required dependencies are Python3 and Bash
-
-Install the dataflows-shell package
-
-```
-$ python3 -m pip install -U dataflows-shell
-```
-
-Import required dfs processors to the current shell
+This example uses the `kubectl` processor to get a list of pods from a Kubernetes cluster and filter based on a condition defined using a Python lambda function
 
 ```
 $ source <(dfs import printer filter_rows kubectl)
-```
 
-Run a processor chain to get a list of pods with a specified condition:
-
-```
 $ kubectl get pods -c -q \
     | dfs 'lambda row: row.update(is_ckan="ckan" in str(row["volumes"]))' --fields=+is_ckan:boolean -q
     | filter_rows --args='[[{"is_ckan":true}]]' -q
     | printer --kwargs='{"fields":["kind","name","namespace"]}'
-```
 
-```
 {'count_of_rows': 12, 'bytes': 57584, 'hash': '5febe0c3cfe75d174e242f290f00c289', 'dataset_name': None}
 checkpoint:1
 {'count_of_rows': 12, 'bytes': 57876, 'hash': '17f446a8f562f10cccc1de1a33c48d91', 'dataset_name': None}
@@ -59,6 +45,30 @@ res_1:
 checkpoint saved: __9
 {'count_of_rows': 6, 'bytes': 40798, 'hash': 'adc31744dfc99a0d8cbe7b081f31d78b', 'dataset_name': None}
 checkpoint:9
+```
+
+## Install
+
+The only required core dependencies are Bash and Python3
+
+Install the dataflows-shell package
+
+```
+python3 -m pip install -U dataflows-shell
+```
+
+Start an interactive DataFlows shell session
+
+```
+$ dfs
+
+DataFlows Shell
+
+press <CTRL + C> to exit the shell
+press <Enter> to switch between DataFlows shell and system shell
+type '--help' for the DataFlows Shell reference
+
+dfs > 
 ```
 
 ## Documentation
