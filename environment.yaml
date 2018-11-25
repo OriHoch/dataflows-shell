@@ -4,4 +4,4 @@ channels:
 dependencies:
   - python>=3.7
   - pip:
-    - dataflows-shell>=0.0.2
+    - dataflows-shell>=0.0.7
