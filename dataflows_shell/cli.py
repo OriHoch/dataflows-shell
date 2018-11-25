@@ -38,22 +38,35 @@ def is_string_dfs_kwarg(key):
     return key in ['load', 'dump', 'args', 'kwargs', 'print-fields', 'print-format', 'fields']
 
 
+def get_single_load_source_steps(load_source, stats, clear):
+    if load_source == 'null':
+        return ()
+    elif load_source == 'checkpoint':
+        return dataflows_shell.processors.checkpoint(load_last_checkpoint=True, clear=clear, dfs_stats=stats),
+    elif load_source.startswith('checkpoint:'):
+        checkpoint_source = load_source.replace('checkpoint:', '')
+        try:
+            return dataflows_shell.processors.checkpoint(int(checkpoint_source), force_load=True, clear=clear,
+                                                         dfs_stats=stats),
+        except ValueError:
+            return dataflows_shell.processors.checkpoint(checkpoint_source, force_load=True, clear=clear,
+                                                         dfs_stats=stats),
+    else:
+        return dataflows.processors.load(f'{load_source}/datapackage.json'),
+
+
 def get_dfs_load_steps(dfs_kwargs, stats):
     clear = dfs_kwargs.get('clear', False)
     if 'load' in dfs_kwargs:
         load_source = dfs_kwargs['load']
-        if load_source == 'null':
-            return ()
-        elif load_source == 'checkpoint':
-            return dataflows_shell.processors.checkpoint(load_last_checkpoint=True, clear=clear, dfs_stats=stats),
-        elif load_source.startswith('checkpoint:'):
-            checkpoint_source = load_source.replace('checkpoint:', '')
-            try:
-                return dataflows_shell.processors.checkpoint(int(checkpoint_source), force_load=True, clear=clear, dfs_stats=stats),
-            except ValueError:
-                return dataflows_shell.processors.checkpoint(checkpoint_source, force_load=True, clear=clear, dfs_stats=stats),
+        if isinstance(load_source, list):
+            steps = []
+            for source in load_source:
+                steps += list(get_single_load_source_steps(source, {}, clear))
+            print(steps, file=sys.stderr)
+            return tuple(steps)
         else:
-            return dataflows.processors.load(f'{load_source}/datapackage.json'),
+            return get_single_load_source_steps(load_source, stats, clear)
     else:
         return dataflows_shell.processors.checkpoint(load_last_checkpoint=True, clear=clear, dfs_stats=stats),
 
@@ -158,7 +171,13 @@ def parse_dfs_args(args):
                 key = arg[0]
                 value = '='.join(arg[1:])
                 if is_string_dfs_kwarg(key):
-                    dfs_kwargs[key] = value
+                    if key in dfs_kwargs:
+                        if isinstance(key, list):
+                            dfs_kwargs[key].append(value)
+                        else:
+                            dfs_kwargs[key] = [dfs_kwargs[key], value]
+                    else:
+                        dfs_kwargs[key] = value
                 else:
                     processor_kwargs[key] = value
             else:
@@ -261,12 +280,31 @@ def dfs_shell(args):
         exit(0)
 
 
+def dfs_import(args):
+    for arg in args:
+        print(f'alias {arg}="dfs {arg}"')
+    exit(0)
+
+
 def dfs():
     args = sys.argv[1:]
     if len(args) == 0 or args[0].endswith('.dfs'):
         dfs_shell(args)
         return
     processor_spec = args.pop(0).strip()
+    if processor_spec == 'import':
+        dfs_import(args)
+        return
+    if processor_spec == 'get-checkpoint-path':
+        checkpoint = args[0]
+        assert checkpoint.startswith('checkpoint:')
+        checkpoint = checkpoint.replace('checkpoint:', '')
+        try:
+            checkpoint = int(checkpoint)
+            print(f'.dfs-checkpoints/__{checkpoint}')
+        except Exception:
+            print(f'.dfs-checkpoints/{checkpoint}')
+        exit(0)
     if processor_spec in ['-h', '--help', 'help']:
         help()
         exit(0)
