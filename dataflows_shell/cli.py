@@ -7,6 +7,7 @@ import json, yaml
 import subprocess
 import tempfile
 from glob import iglob
+from importlib import import_module
 
 
 def is_valid_built_in_processor_spec(processor_spec):
@@ -30,7 +31,9 @@ def parse_processor_spec(processor_spec):
         elif hasattr(dataflows.processors, processor_spec):
             processor_func = getattr(dataflows.processors, processor_spec)
     if not processor_func:
-        raise Exception(f'Failed to parse processor_spec: {processor_spec}')
+        module_spec, processor_spec = processor_spec.split(':')
+        flow_module = import_module(module_spec)
+        processor_func = getattr(flow_module, processor_spec)
     return processor_func
 
 

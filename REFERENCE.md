@@ -10,6 +10,7 @@ dfs [PROCESSOR_SPEC] [POSITIONAL_ARG..] [--NAMED_ARG=..]
 * Name of a built-in dataflows processor (defined under `dataflows.processors`)
 * A lambda row procesing function: `lambda row: <ROW_PROCESSING_LAMBDA>` - for example: `'lambda row: row.update(interesting=row["avg_cpu_load"] > 90)'`
 * Path to a file with extension `.dfs` - a DataFlows shell executable script
+* A flow object or processor function in a python package - `my_module.my_processors:processor`
 
 **POSITIONAL_ARG** - positional args are passed on to the processor function positional args as integers or strings
 

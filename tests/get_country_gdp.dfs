@@ -1,0 +1,6 @@
+#!/usr/bin/env dfs
+
+load https://raw.githubusercontent.com/datasets/gdp/master/data/gdp.csv
+filter_rows --kwargs='{"equals":[{"Country Name":"'"${DFS_ARG1}"'"}]}'
+--dump=checkpoint:${DFS_ARG2}
+printer
