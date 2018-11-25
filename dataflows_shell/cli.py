@@ -195,7 +195,7 @@ def parse_dfs_args(args):
 
 
 def help():
-    with open('REFERENCE.md') as f:
+    with open(os.path.join(os.path.dirname(__file__), '..', 'REFERENCE.md')) as f:
         for line in f.readlines():
             print(line.rstrip())
 
