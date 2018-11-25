@@ -192,7 +192,9 @@ def parse_dfs_args(args):
 
 
 def help():
-    print('dfs <PROCESSOR_SPEC> [POSITIONAL_ARG..] [--NAMED_ARG=..]')
+    with open('REFERENCE.md') as f:
+        for line in f.readlines():
+            print(line.rstrip())
 
 
 def dfs_shell(args):
@@ -203,10 +205,9 @@ def dfs_shell(args):
         dfs_script, dfs_script_args = None, None
     if not dfs_script:
         print('\nDataFlows Shell\n')
-        print("type '--help' for the full DataFlows shell documentation")
         print("press <CTRL + C> to exit the shell")
         print("press <Enter> to switch between DataFlows shell and system shell")
-        help()
+        print("type '--help' for the DataFlows Shell reference")
         print()
     stats = {}
     dataflows_shell.processors.clear_autonumbered_checkpoints(stats)
@@ -239,16 +240,7 @@ def dfs_shell(args):
             if not dfs_script and cmd == '':
                 is_system_shell = not is_system_shell
             elif not dfs_script and cmd == '--help':
-                with open('README.md') as f:
-                    started, ended = False, False
-                    for line in f.readlines():
-                        if not started and line.strip() == '<!-- start-cli-help-message -->':
-                            started = True
-                        elif started and not ended:
-                            if line.strip() == '<!-- end-cli-help-message -->':
-                                ended = True
-                            else:
-                                print(line.rstrip())
+                help()
             else:
                 if cmd.endswith('\\'):
                     while cmd.endswith('\\'):
