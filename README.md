@@ -1,6 +1,8 @@
 # DataFlows Shell
 
-Leverage the [DataFlows](https://github.com/datahq/dataflows) data processing framework for shell automation.
+DataFlows is a *"novel and intuitive way of building data processing flows."*
+
+DataFlows Shell leverage DataFlows to use the same intuitive data processing flows for shell automation.
 
 ## Introduction
 
