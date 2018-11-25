@@ -8,6 +8,7 @@ import subprocess
 import tempfile
 from glob import iglob
 from importlib import import_module
+import secrets
 
 
 def is_valid_built_in_processor_spec(processor_spec):
@@ -41,9 +42,33 @@ def is_string_dfs_kwarg(key):
     return key in ['load', 'dump', 'args', 'kwargs', 'print-fields', 'print-format', 'fields']
 
 
+def get_text_file_stdin_processor(name):
+
+    schema = {'fields': [{'name': 'line_length', 'type': 'integer'},
+                         {'name': 'line', 'type': 'string'},]}
+
+    def text_file_processor(package):
+        package.pkg.add_resource({'name': name, 'path': f'{name}.csv', 'schema': schema})
+        yield package.pkg
+        yield from package
+        yield ({'line_length': len(line.rstrip()), 'line': line.rstrip()}
+               for i, line in enumerate(sys.stdin.readlines()))
+
+    return text_file_processor
+
+
 def get_single_load_source_steps(load_source, stats, clear):
     if load_source == 'null':
         return ()
+    elif load_source.startswith('stdin'):
+        if load_source.startswith('stdin:'):
+            resource_name = load_source.replace('stdin:', '')
+        else:
+            resource_name = 'stdin-' + secrets.token_hex(5)
+        return (dataflows_shell.processors.checkpoint(load_last_checkpoint=True, clear=clear, dfs_stats=stats),
+                get_text_file_stdin_processor(resource_name),
+                dataflows_shell.processors.add_field('line', type='string'),
+                dataflows_shell.processors.add_field('line_length', type='integer'))
     elif load_source == 'checkpoint':
         return dataflows_shell.processors.checkpoint(load_last_checkpoint=True, clear=clear, dfs_stats=stats),
     elif load_source.startswith('checkpoint:'):
@@ -385,3 +410,7 @@ def dfs():
     else:
         raise Exception(f'unsupported print format: {print_format}')
     exit(0)
+
+
+if __name__ == '__main__':
+    dfs()

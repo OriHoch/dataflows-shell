@@ -162,3 +162,18 @@ filter and print the outstanding rows
 ```
 $ filter_rows --args='[[{"outstanding":true}]]' -p
 ```
+
+List files in current directory, load each file by executing a dfs in a sub-shell for each row, print the combined lines
+
+```
+$ source <(dfs import ls filter_rows exec printer)
+
+$ ls -c  \
+    | filter_rows \
+        --args='[[{"path_type":"file"}]]'\
+        --fields='+exec=cat {path} \
+    | dfs --load=stdin:{path} -q' \
+    | dfs exec
+
+$ dfs printer
+```

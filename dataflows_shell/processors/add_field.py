@@ -2,10 +2,10 @@ from dataflows.helpers.resource_matcher import ResourceMatcher
 
 
 def column_adder(rows, k, v):
-    for row in rows:
+    for rownum, row in enumerate(rows):
         if k not in row:
             if v:
-                row[k] = v.format(**row)
+                row[k] = v.format(**dict(row, __rownum=rownum))
             else:
                 row[k] = v
         yield row

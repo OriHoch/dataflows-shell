@@ -4,3 +4,4 @@ workdir
 dist
 tests/data
 .dfs-checkpoints
+__pycache__

@@ -21,6 +21,7 @@ The following named args are handled by dfs, all other args are passed on to the
 * `-l=<LOAD_SPEC>` `--load=<LOAD_SPEC>` - Load the resource/s from the provided LOAD_SPEC before running the processor
   * The LOAD_SPEC is parsed according to the following rules, first one that matches is used:
   * `null` - Don't load anything
+  * `stdin` - Load textual data from stdin into a tabular data set with 1 column - `line`
   * `checkpoint` - Loads from the last auto-numbered checkpoint, this is the default if no load argument is provided
   * `checkpoint:<INTEGER>` - Load from a checkpoint number
   * `checkpoint:<NAME>` - Load from a named checkpoint
