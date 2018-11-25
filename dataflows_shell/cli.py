@@ -194,10 +194,18 @@ def parse_dfs_args(args):
     return processor_args, processor_kwargs, dfs_kwargs
 
 
-def help():
-    with open(os.path.join(os.path.dirname(__file__), '..', 'REFERENCE.md')) as f:
+def print_file(name):
+    with open(os.path.join(os.path.dirname(__file__), '..', name)) as f:
         for line in f.readlines():
             print(line.rstrip())
+
+
+def help():
+    print_file('README.md')
+
+
+def version():
+    print_file('VERSION.txt')
 
 
 def dfs_shell(args):
@@ -307,6 +315,9 @@ def dfs():
         stats = {}
         dataflows_shell.processors.clear_autonumbered_checkpoints(stats)
         print(f'Cleared {stats["cleared_dfs_checkpoints"]} checkpoints', file=sys.stderr)
+        exit(0)
+    if processor_spec in ['--version', 'version', '-v']:
+        version()
         exit(0)
     if processor_spec in ['--list-checkpoints', '-ls']:
         num_autonumbered = 0
