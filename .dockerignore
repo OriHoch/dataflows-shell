@@ -1,0 +1,7 @@
+workdir
+.idea
+*.egg-info
+dist
+tests/data
+.dfs-checkpoints
+__pycache__

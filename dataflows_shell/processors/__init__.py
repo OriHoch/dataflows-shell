@@ -8,3 +8,4 @@ from .add_field import add_field
 # third party processors
 
 from .kubectl import kubectl
+from .ckan import ckan

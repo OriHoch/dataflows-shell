@@ -16,4 +16,6 @@ Having dependency on system executables is fine - free free to add processors fo
 
 ## Third party processors
 
-* `kubectl` - Interact with Kubernetes via `kubectl`
+* `kubectl` - Interact with [Kubernetes](https://kubernetes.io/) via `kubectl`
+
+* `ckan` - Interact with the [CKAN Api](https://docs.ckan.org/en/2.8/api/index.html)
