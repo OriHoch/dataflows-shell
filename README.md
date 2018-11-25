@@ -75,5 +75,5 @@ dfs >
 
 * [DataFlows Shell Tutorial](TUTORIAL.md)
 * [DataFlows Shell Reference](REFERENCE.md)
-* [DataFlows Shell Processors Reference](processors/README.md)
+* [DataFlows Shell Processors Reference](dataflows_shell/processors/README.md)
 * [DataFlows Processors Reference](https://github.com/datahq/dataflows/blob/master/PROCESSORS.md)
