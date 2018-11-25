@@ -4,9 +4,7 @@
 dfs [PROCESSOR_SPEC] [POSITIONAL_ARG..] [--NAMED_ARG=..]
 ```
 
-**PROCESSOR_SPEC** - specifies the DataFlows processor to run
-
-The following parsing attempts are made, first one that matches to a processor is used:
+**PROCESSOR_SPEC** - specifies the DataFlows processor to run from the following options:
 
 * Name of a built-in dataflows-shell processor (defined under `dataflows_shell.processors`)
 * Name of a built-in dataflows processor (defined under `dataflows.processors`)

@@ -47,7 +47,7 @@ dfs > filter_rows --kwargs='{"equals":[{"keep":true}]}' --print
 Load from the named checkpoint, modify and re-run the filter:
 
 ```
-'lambda row: row.update(keep=row["path_type"] == "file" and row["file_size"] > 1024 * 1024 * 10)' \
+dfs > 'lambda row: row.update(keep=row["path_type"] == "file" and row["file_size"] > 1024 * 1024 * 10)' \
  --fields=+keep:boolean --load=checkpoint:home_zip_files \
  | dfs filter_rows --kwargs='{"equals":[{"keep":true}]}' --print
 ```
@@ -59,7 +59,7 @@ The last command demonstrates some more advanced syntax of the DataFlows DSL:
 * `--load` argument is used to load from a named checkpoint instead of the default which is to load from the last auto-saved checkpoint
 * `--kwargs` argument is used to provide complex data structures to processors
 
-You can also load data from remote sources using the standard library `load` processor:
+You can also load data from remote sources using the standard library `load` processor
 
 ```
 dfs > load https://raw.githubusercontent.com/datasets/gdp/master/data/gdp.csv -c -p
@@ -94,7 +94,7 @@ The DataFlows shell is just a thin wrapper around the system's shell,
 this allows to use environment variables or execute shell commands
 
 All dfs commands are actually shell commands, prefixed with `dfs`,
-run the following from the system's shell to list files and add a constant value field:
+run the following from the system's shell to list files and add a field with a constant value using output from a shell command:
 
 ```
 $ dfs ls -c --fields=+generator_details="$(uname -a)" -p
@@ -103,12 +103,14 @@ $ dfs ls -c --fields=+generator_details="$(uname -a)" -p
 Some more advanced dfs and shell integration - executing a shell script for each row
 
 ```
-$ rm -f large_files &&\
-    dfs ls -c \
-        | dfs 'lambda row: row.update(large_file=row["path_type"] == "file" and row["file_size"] > 500)' --fields=+large_file:boolean \
-        | dfs filter_rows '--kwargs={"equals":[{"large_file":true}]}' '--fields=+exec=echo "{path}:{file_size}" >> large_files' \
-        | dfs exec &&\
-    cat large_files
+$ dfs ls -c \
+    | dfs 'lambda row: row.update(large_file=row["path_type"] == "file" and row["file_size"] > 500)' \
+        --fields=+large_file:boolean \
+    | dfs filter_rows '--kwargs={"equals":[{"large_file":true}]}' \
+        '--fields=+exec=echo "{path}:{file_size}" >> large_files' \
+    | dfs exec
+
+$ cat large_files
 ```
 
 import dfs processor specs as shell aliases
