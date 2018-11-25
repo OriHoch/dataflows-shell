@@ -51,7 +51,17 @@ checkpoint:9
 
 ## Install
 
-The only required core dependencies are Bash and Python3
+The only required core dependencies are Bash and Python3.7+
+
+To get a compatible Python you can use [Miniconda](https://conda.io/miniconda.html):
+
+```
+$ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+$ bash Miniconda3-latest-Linux-x86_64.sh
+$ wget https://raw.githubusercontent.com/OriHoch/dataflows-shell/master/environment.yaml
+$ conda env create -f environment.yaml
+$ conda activate dataflows-shell
+```
 
 Install the dataflows-shell package
 

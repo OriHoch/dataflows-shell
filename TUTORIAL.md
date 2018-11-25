@@ -1,6 +1,6 @@
 # DataFlows Shell Tutorial
 
-Install DataFlows Shell from a Bash shell with Python3:
+Install DataFlows Shell from a Bash shell with Python3.7+ (See the [README](README.md) for detailed installation instructions)
 
 ```
 $ python3 -m pip install -U dataflows-shell
