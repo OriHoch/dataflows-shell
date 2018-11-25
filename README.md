@@ -12,9 +12,7 @@ DataFlows Shell acts as a very minimal and intuitive layer between the shell and
 
 ## Demo
 
-The following example shell session demonstrated importing the required processors, running a processor chain and printing the output.
-
-This example uses the `kubectl` processor to get a list of pods from a Kubernetes cluster and filter based on a condition defined using a Python lambda function
+The following example demonstrates importing some processors to the local shell, using them to run a processor chain and printing the output. It uses the `kubectl` processor to get a list of pods from a Kubernetes cluster and filter based on a condition defined using a Python lambda function.
 
 ```
 $ source <(dfs import printer filter_rows kubectl)
@@ -22,7 +20,6 @@ $ source <(dfs import printer filter_rows kubectl)
 $ kubectl get pods -c -q \
     | dfs 'lambda row: row.update(is_ckan="ckan" in str(row["volumes"]))' --fields=+is_ckan:boolean -q
     | filter_rows --args='[[{"is_ckan":true}]]' -q
-    | printer --kwargs='{"fields":["kind","name","namespace"]}'
 
 {'count_of_rows': 12, 'bytes': 57584, 'hash': '5febe0c3cfe75d174e242f290f00c289', 'dataset_name': None}
 checkpoint:1
@@ -30,6 +27,9 @@ checkpoint:1
 checkpoint:2
 {'count_of_rows': 6, 'bytes': 40797, 'hash': '6ab4290efd82478b1677d1f226c4199a', 'dataset_name': None}
 checkpoint:3
+
+$ printer --kwargs='{"fields":["kind","name","namespace"]}'
+
 saving checkpoint to: .dfs-checkpoints/__9
 using checkpoint data from .dfs-checkpoints/__8
 res_1:
