@@ -28,7 +28,7 @@ setup(
     install_requires=['dataflows', 'pyyaml'],
     entry_points={
       'console_scripts': [
-        'dfs = dataflows_shell.cli:dfs',
+        'dfs = dataflows_shell.cli:cli',
       ]
     },
 )

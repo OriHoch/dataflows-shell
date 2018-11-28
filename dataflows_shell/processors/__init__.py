@@ -9,3 +9,4 @@ from .add_field import add_field
 
 from .kubectl import kubectl
 from .ckan import ckan
+from .requests_html import requests_html
