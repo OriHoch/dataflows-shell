@@ -16,6 +16,17 @@ def clear_autonumbered_checkpoints(dfs_stats, checkpoint_path='.dfs-checkpoints'
             dfs_stats['cleared_dfs_checkpoints'] += 1
 
 
+def get_last_checkpoint_num(checkpoint_path):
+    last_checkpoint_num = 0
+    for path in iglob(f'{checkpoint_path}/*'):
+        name = path[len(checkpoint_path) + 1:]
+        if name.startswith(AUTONUMBER_CHECKPOINT_NAME_PREFIX):
+            num = int(name.replace(AUTONUMBER_CHECKPOINT_NAME_PREFIX, ''))
+            if num > last_checkpoint_num:
+                last_checkpoint_num = num
+    return last_checkpoint_num
+
+
 class checkpoint(dataflows_checkpoint):
 
     def __init__(self, checkpoint_name=None, checkpoint_path='.dfs-checkpoints',
@@ -31,13 +42,7 @@ class checkpoint(dataflows_checkpoint):
         self.force_load = force_load
         self.load_last_checkpoint = load_last_checkpoint
         if not checkpoint_name:
-            last_checkpoint_num = 0
-            for path in iglob(f'{checkpoint_path}/*'):
-                name = path[len(checkpoint_path)+1:]
-                if name.startswith(AUTONUMBER_CHECKPOINT_NAME_PREFIX):
-                    num = int(name.replace(AUTONUMBER_CHECKPOINT_NAME_PREFIX, ''))
-                    if num > last_checkpoint_num:
-                        last_checkpoint_num = num
+            last_checkpoint_num = get_last_checkpoint_num(checkpoint_path)
             if self.load_last_checkpoint:
                 checkpoint_num = last_checkpoint_num
             else:
